@@ -1,0 +1,106 @@
+<h1>2ch matome converter</h1>
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+
+<script>
+function p(v){
+	console.log(v);
+}
+
+function convert(){
+	var output_text = '';
+	var user_text_buffer = '';
+
+	var splitted = getTextArray('input_textarea')
+	for(var i=0; i<splitted.length; i++){
+		var s = splitted[i];
+		var _isUserData = isUserData(s);
+
+		if(_isUserData){
+			//ユーザテキストをまとめて追加
+			if(output_text!=''){
+				output_text += '<span style="color: blue;"><b>' + "\n" + user_text_buffer + '</b></span>' + "" + '<br>' + "\n<br>";
+			}
+
+			//そのまま追加
+			s = filterUserData(s);
+			output_text += (s+"\n<br>");
+			user_text_buffer = ''; //reset
+
+		}else{
+			user_text_buffer += (s+"\n");
+		}
+	}
+	//最後に出力に反映
+	$('#output_textarea').val(output_text);
+	$('#html_view_test').html(output_text);
+}
+
+//改行で分割して配列で返す
+function getTextArray(id){
+	var textAll = $('#'+id).val();
+	return textAll.split("\n");
+}
+
+//ユーザーで他の行か判定
+function isUserData(s){
+	var sign = 'ID:';
+	if(s.indexOf(sign)==-1){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+// 全ての文字列 s1 を s2 に置き換える
+function replaceAll(expression, org, dest){
+    return expression.split(org).join(dest);
+}
+
+function filterUserData(s){
+	var wordArray = getTextArray('swap_textarea');
+	for(var i=0; i<wordArray.length; i++){
+		var word = wordArray[i];
+		s = s.replace(word, '');
+	}
+	return s;
+}
+
+
+</script>
+
+<h3>swap list</h3>
+<textarea id="swap_textarea" style="width:1000px;height:200px">
+以下、名無しにかわりましてVIPがお送りします 
+(月)
+(火)
+(水)
+(木)
+(金)
+(土)
+(日)
+</textarea>
+
+<h3>input</h3>
+<textarea id="input_textarea" style="width:1000px;height:200px">
+2 以下、名無しにかわりましてVIPがお送りします 2013/06/25(火) 21:57:45.25 ID:oVHUvm6lP
+あああ
+いいい
+
+4 以下、名無しにかわりましてVIPがお送りします 2013/06/25(火) 21:58:10.81 ID:PpDtIY5XP
+ううう
+えええ
+</textarea>
+
+<br>
+
+<a class="btn btn-primary" onClick="convert()">convert</a>
+<br>
+<br>
+
+<h3>output</h3>
+<textarea id="output_textarea" style="width:1000px;height:200px">
+</textarea>
+
+<h3>html view test</h3>
+<div id="html_view_test"></div>
