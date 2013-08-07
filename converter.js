@@ -26,6 +26,9 @@ function convert(){
 			user_text_buffer += (s+"\n");
 		}
 	}
+	//最後
+	output_text += '<span style="color: blue;"><b>' + "\n" + user_text_buffer + '</b></span>' + "" + '<br>' + "\n<br>";
+
 	//最後に出力に反映
 	$('#output_textarea').val(output_text);
 	$('#html_view_test').html(output_text);
